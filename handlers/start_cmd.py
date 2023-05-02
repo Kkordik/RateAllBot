@@ -18,7 +18,6 @@ async def cmd_start(message: types.Message):
     await userdb.search_add_user()
 
     keyboard = start_keyboard(userdb)
-    print("ok", userdb.lang)
     await bot.send_message(chat_id, text=text[userdb.lang]["start_message"], parse_mode="HTML", reply_markup=keyboard,
                            disable_web_page_preview=True)
 
@@ -48,7 +47,7 @@ async def choose_language(message: types.Message):
 
 
 def register_start_cmd_handlers(dp: Dispatcher):
-    dp.register_message_handler(cmd_start, commands="start")
+    dp.register_message_handler(cmd_start, lambda message: message.text == "/start")
     dp.register_message_handler(choose_language, lambda message: message.text in LANGUAGES2)
     dp.register_message_handler(edit_language, lambda message: message.text in [text["ru"]["edit_lang"],
                                                                                 text["en"]["edit_lang"],

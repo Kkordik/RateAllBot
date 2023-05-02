@@ -45,17 +45,15 @@ async def search_not_chat(mention, chat_id, userdb):
         except Exception as e:
             await app.stop()
             print(e)
-            await bot.send_message(chat_id, text[userdb.lang]["smth_wrong"])
+            await bot.send_message(chat_id, text[userdb.lang]["smth_wrong"], disable_web_page_preview=True)
     except Exception as e:
         print("serch_not_chat   ", e)
 
 
 async def username(message: types.Message):
-    print(message.text.split("t.me/"), "  username ", message.entities)
     chat_id = message.chat.id
     user_id = message.from_user.id
     m_text = message.text
-    subs_numb = None
 
     userdb = UserDb(user_id)
     await userdb.search_add_user()
@@ -64,10 +62,12 @@ async def username(message: types.Message):
     # parsing mention from message
     if m_text not in m_text.split("@"):
         mention = m_text.split("@")[1].split()[0]
+    elif "/start" in message.text:
+        mention = m_text.split(" ")[1]
     elif m_text not in m_text.split("t.me/"):
         mention = m_text.split("t.me/")[1].split()[0]
     else:
-        await bot.send_message(chat_id, text[userdb.lang]["smth_wrong"])
+        await bot.send_message(chat_id, text[userdb.lang]["smth_wrong"], disable_web_page_preview=True)
         return
 
     # searching chat_id of mentioned group/ channel
@@ -79,7 +79,6 @@ async def username(message: types.Message):
 
     # object searchind/adding db
     objectdb = ObjectDb(object_id, obj_type)
-    print(object_id)
     await objectdb.search_add_obj()
 
     # fake rates
@@ -94,7 +93,7 @@ async def username(message: types.Message):
     else:
         rate = 0
 
-    keyboard = rate_keyboard(objectdb.objectid, mention)
+    keyboard = rate_keyboard(objectdb.objectid, None, mention, userdb)
     if user_left_rate is not None:
         await bot.edit_message_text(text[userdb.lang]["rate"].format("@{}".format(mention), rate,
                                                                      user_left_rate[0], rates_numb[0]), sended_message.chat.id,
@@ -107,4 +106,5 @@ async def username(message: types.Message):
 
 def register_username_handlers(dp: Dispatcher):
     dp.register_message_handler(username, lambda message: "mention" in str(message.entities) or
-                                                          message.text not in message.text.split("t.me/"))
+                                                          message.text not in message.text.split("t.me/") or
+                                                          "/start" in message.text)

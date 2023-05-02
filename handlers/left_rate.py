@@ -22,6 +22,7 @@ dp = Dispatcher(bot, storage=MemoryStorage())
 class Rate(StatesGroup):
     rate = State()
     objectid = State()
+    first_name = State()
     mention = State()
     captcha_answ = State()
     photo_path = State()
@@ -102,12 +103,12 @@ def captcha_gen():
 async def left_rate(call: types.CallbackQuery):
     chat_id = call.message.chat.id
     user_id = call.from_user.id
-    print(user_id, "  left_rate")
     userdb = UserDb(user_id)
     await userdb.search_add_user()
     rate = call.data.split("_")[1]
     object_id = call.data.split("_")[2]
-    mention = call.data.split("_")[3]
+    first_name = call.data.split("_")[3]
+    mention = call.data.split("_")[4]
 
     photo, answer, keyboard, photo_path = captcha_gen()
 
@@ -115,10 +116,9 @@ async def left_rate(call: types.CallbackQuery):
                          parse_mode="html")
     os.remove(photo_path)
 
-    print(chat_id, " captcha user_id - ", user_id)
     state = dp.get_current().current_state(chat=chat_id, user=user_id)
     await state.set_state("Rate")
-    await state.update_data(objectid=object_id, mention=mention, captcha_answ=answer, rate=rate,
+    await state.update_data(objectid=object_id, first_name=first_name, mention=mention, captcha_answ=answer, rate=rate,
                             message_id_edit=call.message.message_id)
     await Rate.did_captcha.set()
     await call.answer()
@@ -128,7 +128,6 @@ async def check_captch_answ(call: types.CallbackQuery, state: FSMContext):
     chat_id = call.message.chat.id
     user_id = call.from_user.id
     if call.data.split("_")[1] == "cancel":
-        print("canceleeed")
         await state.finish()
         await call.answer(show_alert=True, text="Отменено/Скасовано/Canceled")
         await bot.delete_message(chat_id, call.message.message_id)
@@ -137,14 +136,22 @@ async def check_captch_answ(call: types.CallbackQuery, state: FSMContext):
     await userdb.search_add_user()
 
     data = await state.get_data()
-    print(data)
     object_id = data["objectid"]
+    first_name = data["first_name"]
     mention = data["mention"]
     captcha_answ = data["captcha_answ"]
     rate = data["rate"]
     message_id_edit = data["message_id_edit"]
 
-    print(str(captcha_answ), " -> correct answ. user answer ->  ", call.data.split("_")[1])
+    if first_name == "None":
+        first_name = None
+
+    if mention == "None":
+        mention = None
+        displayed_name = first_name
+    else:
+        displayed_name = "@{}".format(mention)
+
     if str(captcha_answ) == call.data.split("_")[1]:
         await call.answer(show_alert=True, text=text[userdb.lang]["captch_done"])
         await bot.delete_message(call.message.chat.id, call.message.message_id)
@@ -156,9 +163,10 @@ async def check_captch_answ(call: types.CallbackQuery, state: FSMContext):
 
         rate = round(float(rate[0]), 2)
 
-        keyboard = rate_keyboard(objectdb.objectid, mention)
+        keyboard = rate_keyboard(objectdb.objectid, first_name, mention, userdb)
+
         try:
-            await bot.edit_message_text(text[userdb.lang]["rate"].format("@{}".format(mention), rate,
+            await bot.edit_message_text(text[userdb.lang]["rate"].format(displayed_name, rate,
                                                                          user_left_rate[0], rates_numb[0]),
                                         chat_id, message_id_edit, reply_markup=keyboard, parse_mode="html")
         except Exception as e:
@@ -173,7 +181,6 @@ async def check_captch_answ(call: types.CallbackQuery, state: FSMContext):
                              parse_mode="html")
         os.remove(photo_path)
 
-        print(chat_id, " again captcha user_id - ", user_id)
 
 
 def register_left_rate_handler(dp: Dispatcher):

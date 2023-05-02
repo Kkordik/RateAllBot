@@ -104,7 +104,6 @@ class ObjectDb:
             print(ex)
 
     async def create_fake_rates(self, subs_numb=None):
-        print("fake rates ", self.objectid, " subs_numb = ", subs_numb, " obj_type = ", self.obj_type)
         if self.obj_type in ["group", "supergroup"] and subs_numb is not None:
             subs_numb = int(subs_numb)
             rates_numb = round((subs_numb / 1000) ** 0.5) + 1
@@ -126,7 +125,6 @@ class ObjectDb:
             select_rate = "SELECT AVG(rate) FROM rates WHERE object_id = {}".format(self.objectid)
             select_user_left_rate = "SELECT rate FROM rates WHERE user_id = {} AND object_id = {}".format(
                 user_id, self.objectid)
-            print(user_id, " get rate  ", self.objectid)
             async with pool.acquire() as conn:
                 async with conn.cursor() as cur:
                     await cur.execute(select_rates_numb)

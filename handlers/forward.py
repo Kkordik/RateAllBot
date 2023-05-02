@@ -14,7 +14,6 @@ bot = Bot(token=BOT_TOKEN)
 
 
 async def forward_user(message: types.Message):
-    print("forward_user")
     chat_id = message.chat.id
     user_id = message.from_user.id
 
@@ -25,11 +24,12 @@ async def forward_user(message: types.Message):
     user = message.forward_from
     object_id = user.id
     mention = user.username
+
     if mention is None:
-        mention = user.first_name
-        username = mention
+        displayed_name = user.first_name
     else:
-        username = "@{}".format(mention)
+        displayed_name = "@{}".format(mention)
+
     if user.is_bot:
         obj_type = "bot"
     else:
@@ -49,20 +49,18 @@ async def forward_user(message: types.Message):
         rate = round(float(rate[0]), 2)
     else:
         rate = 0
-    keyboard = rate_keyboard(objectdb.objectid, mention)
-    print(user_id, "  looking for rate", chat_id, " - chat_id")
+    keyboard = rate_keyboard(objectdb.objectid, user.first_name, mention, userdb)
     if user_left_rate is not None:
-        await bot.edit_message_text(text[userdb.lang]["rate"].format("{}".format(username), rate,
+        await bot.edit_message_text(text[userdb.lang]["rate"].format(displayed_name, rate,
                                                                      user_left_rate[0], rates_numb[0]), sended_message.chat.id,
                                     sended_message.message_id, reply_markup=keyboard, parse_mode="html")
     else:
-        await bot.edit_message_text(text[userdb.lang]["rate_not_full"].format("{}".format(username), rate, rates_numb[0]),
+        await bot.edit_message_text(text[userdb.lang]["rate_not_full"].format(displayed_name, rate, rates_numb[0]),
                                     sended_message.chat.id,
                                     sended_message.message_id, reply_markup=keyboard, parse_mode="html")
 
 
 async def forward_group(message: types.Message):
-    print("forward_group")
     chat_id = message.chat.id
     user_id = message.from_user.id
 
@@ -73,11 +71,12 @@ async def forward_group(message: types.Message):
     chat = message.forward_from_chat
     object_id = chat.id
     mention = chat.username
+
     if mention is None:
-        mention = chat.title
-        username = mention
+        displayed_name = chat.title
     else:
-        username = "@{}".format(mention)
+        displayed_name = "@{}".format(mention)
+
     if chat.type == "group":
         obj_type = "group"
     elif chat.type == "supergroup":
@@ -99,14 +98,13 @@ async def forward_group(message: types.Message):
         rate = round(float(rate[0]), 2)
     else:
         rate = 0
-    keyboard = rate_keyboard(objectdb.objectid, username)
-    print(user_id, "  looking for rate", chat_id, " - chat_id")
+    keyboard = rate_keyboard(objectdb.objectid, chat.title, mention, userdb)
     if user_left_rate is not None:
-        await bot.edit_message_text(text[userdb.lang]["rate"].format("{}".format(username), rate,
+        await bot.edit_message_text(text[userdb.lang]["rate"].format(displayed_name, rate,
                                                                      user_left_rate[0], rates_numb[0]), sended_message.chat.id,
                                     sended_message.message_id, reply_markup=keyboard, parse_mode="html")
     else:
-        await bot.edit_message_text(text[userdb.lang]["rate_not_full"].format("{}".format(username), rate, rates_numb[0]),
+        await bot.edit_message_text(text[userdb.lang]["rate_not_full"].format(displayed_name, rate, rates_numb[0]),
                                     sended_message.chat.id,
                                     sended_message.message_id, reply_markup=keyboard, parse_mode="html")
 
