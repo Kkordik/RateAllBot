@@ -6,7 +6,7 @@ text = {
         "start_message": "<b>Привет👋 Здесь ты можешь узнать рейтинг📊 <i>ботов</i> / <i>каналов</i> / <i>групп</i> /"
                          f" <i>юзеров</i>. </b>\n❔<a href='{MORE_URL}'>Подробнее..</a>\n❔<a href='{FOR_WHAT_URL}'>Зачем мне это..</a>"
                          "\n\n<b>Способы как узнать рейтинг📊:</b>\n● Переслать сообщение📩️"
-                         "\n●  Отправить @username или t.me/username🔗",
+                         "\n● Отправить @username или t.me/username🔗",
         "help": "Помощь",
         "edit_lang": "Змінити мову/Change language",
         "about_us": "О нас",
