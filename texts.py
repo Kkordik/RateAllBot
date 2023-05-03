@@ -35,9 +35,9 @@ text = {
         "wait": "Wait...",
         "rate": "{}:\n\n<b>{}⭐️ - average rating</b>\nYour rating is <b>{} </b>\nTotal <i>{}</i> ratings\n\nYou can change"
                 " your assessment, having previously passed the captcha",
-        "rate_not_full": "{}:\n<b>{}⭐️ has an average rating</b>\nTotal <i>{}</i> ratings\n\nYou can rate by completing the captcha first",
+        "rate_not_full": "{}:\n<b>{}⭐️- average rating</b>\nTotal <i>{}</i> ratings\n\nYou can rate after completing the captcha",
         "smth_wrong_id": "I couldn't find <code>chat_id</code> 😞",
-        "make_captcha": "<b>Solve the captcha to continue.</b> \nThis is very important for us, because the veracity of ratings depends on it. "
+        "make_captcha": "<b>Complete the captcha to continue.</b> \nThis is very important for us, because the veracity of ratings depends on it. "
                         "If you don't find the answer in the list, maybe you should open the picture in full or "
                         "look for math signs😉",
         "make_captcha_again": "<b>It's okay! try again, you have many attempts</b>😉",
@@ -61,7 +61,7 @@ text = {
         "make_captcha": "<b>Щоб продовжити - розв'яжи капчу.</b> \nДля нас це дуже важливо, тому що від цього залежить правдивість"
                         " рейтингів. Якщо не знаходиш відповідь у списку, можливо, варто відкрити картинку повністю або"
                         "пошукати математичні знаки😉",
-        "make_captcha_again": "<b>Нічого страшного! спробуй ще раз, у тебе багато спроб</b>😉",
+        "make_captcha_again": "<b>Нічого страшного! Спробуй ще раз, у тебе багато спроб</b>😉",
         "captch_done": "Готово! Зараз внесемо зміни до бази даних.",
         "share_rating": "📨Поділитись рейтингом"
     }
