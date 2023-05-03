@@ -24,7 +24,7 @@ text = {
         "share_rating": "📨Поделиться рейтингом"
     },
     "en": {
-        "start_message": "<b>Hello👋 Here you can see rating📊 <i>bots</i> / <i>channels</i> / <i>groups</i> /"
+        "start_message": "<b>Hello👋 Here you can see rating📊 of <i>bots</i> / <i>channels</i> / <i>groups</i> /"
                          f" <i>users</i>. </b>\n❔<a href='{MORE_URL}'>More..</a>\n❔<a href='{FOR_WHAT_URL}'>Why do I need this..</a>"
                          "\n\n<b>Ways to find out rating📊:</b>\n● Forward message📩️"
                          "\n● Send @username or t.me/username🔗",
